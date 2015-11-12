@@ -1,9 +1,16 @@
 .model small
 .stack 128
 .data
+; 			 ______________________ 1 = cuadro, 4 = color
+;			 |		_______________ 14h = origen en x
+;			 |		|	 __________ 15h = origen en y
+;			 |		|	 |		___ 10h = lado del cuadro
+;            |      |	 |		|
 cuadro1	dw 0014h,0014h,0015h,0010h ;ejemplo cuadro
 cuadro2	dw 0015h,0080h,0015h,0020h ;ejemplo cuadro
 cuadro3	dw 0019h,0100h,0015h,0030h ;ejemplo cuadro
+barrera1 db 11101011b
+barrera2 db 10000001b 
 ;rec1	db 24h,100,100,20,30
 orx		dw ? ;origen x
 ory		dw ? ;origen y
@@ -17,14 +24,19 @@ main proc
 mov ax,@data
 mov ds,ax
 
+
+
 mov ah,00			;set video mode http://stanislavs.org/helppc/int_10-0.html
-mov al,12h			;modo grafico 640x480 pixeles 16 colores
+;mov al,12h			;modo grafico 640x480 pixeles 16 colores
+mov al,0Dh
 int 10h                
 ;color de fondo
 mov ah,0Bh			;set color pallet http://stanislavs.org/helppc/int_10-b.html
 mov bh,00			;background or border 
-mov bl,1100b		;color
+mov bl,0		;color
 int 10h  
+
+jmp fin
 
 xor cx,cx			;clear
 xor dx,dx			;clear
@@ -78,18 +90,54 @@ jne dibuja
 ret
 
 drawrec:			;funcion vacia
-fin:
-mov ah,10h			;espera caracter
-int 16h
-mov ax,4c00h
-int 21h
 
 pixel:
+push ax
+push bx
 mov ah,0Ch			;dibuja pixel
 mov bh,00			;pagina
 mov al,color 		;color a dibujar
 int 10h				;las coordenandas ya estan guardadas en cx y dx
+pop bx
+pop ax
 ret
+
+fin:
+mov ah,10h			;espera caracter
+int 16h
+;-----------------------------------------------------------------------------
+mov cx,8
+lea bx,barrera1
+mov al,[bx]
+mov ah,80h
+mov orx,0020h
+mov ory,0050h
+again:
+push cx
+mov cx,orx
+mov dx,ory
+test al,ah
+je negro
+mov color,0Fh
+call pixel
+jmp sigue
+negro:
+mov color,0
+call pixel
+sigue:
+ror ah,1
+inc orx
+pop cx
+loop again
+
+mov ah,10h			;espera caracter
+int 16h
+
+mov ah,2ch
+int 21h
+
+mov ax,4c00h
+int 21h
 
 
 main endp
