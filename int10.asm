@@ -106,34 +106,34 @@ fin:
 mov ah,10h			;espera caracter
 int 16h
 ;-----------------------------------------------------------------------------
-mov cx,8
-lea bx,barrera1
-mov al,[bx]
-mov ah,80h
-mov orx,0020h
-mov ory,0050h
+mov cx,8			;variable para el loop
+lea bx,barrera1		;direccion de barrera1
+mov al,[bx]			;guarda valor de barrera en al
+mov ah,80h			;valor inicial para el test
+mov orx,0020h		;origen de barrera en x
+mov ory,0050h		;origen de barrera en y
 again:
 push cx
-mov cx,orx
-mov dx,ory
-test al,ah
-je negro
-mov color,0Fh
+mov cx,orx			;origen en x en cx
+mov dx,ory			;origen en y en dx
+test al,ah			;test = and pero no guarda el resultado
+je negro			
+mov color,0Fh 		;color
 call pixel
 jmp sigue
 negro:
-mov color,0
+mov color,0			;color
 call pixel
 sigue:
-ror ah,1
-inc orx
+ror ah,1			;rotacion para seguir comparando
+inc orx				;incrementa direccion en x
 pop cx
-loop again
+loop again			;regresa
 
 mov ah,10h			;espera caracter
 int 16h
 
-mov ah,2ch
+mov ah,2ch			;instruccion para sacar la Hora
 int 21h
 
 mov ax,4c00h
