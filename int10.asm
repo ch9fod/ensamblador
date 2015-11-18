@@ -36,7 +36,7 @@ mov bh,00			;background or border
 mov bl,0		;color
 int 10h  
 
-jmp fin
+jmp leepixel
 
 xor cx,cx			;clear
 xor dx,dx			;clear
@@ -51,7 +51,9 @@ call drawcuad		;rutina de dubujar cuadro
 lea bx,cuadro3		;dir de registro inicial cuadro1
 call drawcuad		;rutina de dubujar cuadro
 
-jmp fin
+;------------------------------------------------------
+jmp fin 			;salto para debuggear
+;------------------------------------------------------
 
 drawcuad:
 mov al,[bx] 		;toda esta seccion
@@ -133,8 +135,37 @@ loop again			;regresa
 mov ah,10h			;espera caracter
 int 16h
 
+;------------------------------------------------------
+;leer hora
 mov ah,2ch			;instruccion para sacar la Hora
 int 21h
+
+mov ah,10h			;espera caracter
+int 16h
+
+;--------------------------------------------------------------
+leepixel:
+mov ah,0Dh			;instruccion de leer pixel
+mov bh,0			;pagina 0
+mov cx,50			;coordenada en X 
+mov dx,50			;coordenada en Y
+int 10h				;color en AL			
+
+;--------------------------------------------------------
+;modo texto y set cursor
+
+mov ah,00			;set video mode http://stanislavs.org/helppc/int_10-0.html
+mov al,01h 			;40x25 text mode
+int 10h   
+
+mov ah,02h 			;set cursor position
+mov bh,0			;pagina
+mov dh,10			;fila
+mov dl,20			;columna
+int 10h
+
+mov ah,10h			;espera caracter
+int 16h
 
 mov ax,4c00h
 int 21h
