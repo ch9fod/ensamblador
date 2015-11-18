@@ -33,10 +33,12 @@ int 10h
 ;color de fondo
 mov ah,0Bh			;set color pallet http://stanislavs.org/helppc/int_10-b.html
 mov bh,00			;background or border 
-mov bl,0		;color
+mov bl,0			;color
 int 10h  
 
-jmp leepixel
+;------------------------------------------------------
+jmp leepixel		;salto para debug
+;------------------------------------------------------
 
 xor cx,cx			;clear
 xor dx,dx			;clear
@@ -51,9 +53,7 @@ call drawcuad		;rutina de dubujar cuadro
 lea bx,cuadro3		;dir de registro inicial cuadro1
 call drawcuad		;rutina de dubujar cuadro
 
-;------------------------------------------------------
-jmp fin 			;salto para debuggear
-;------------------------------------------------------
+jmp fin 			
 
 drawcuad:
 mov al,[bx] 		;toda esta seccion
