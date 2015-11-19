@@ -36,6 +36,8 @@ mov bh,00			;background or border
 mov bl,0			;color
 int 10h  
 
+;http://stanislavs.org/helppc/int_10-b.html
+
 ;------------------------------------------------------
 jmp leepixel		;salto para debug
 ;------------------------------------------------------
@@ -163,6 +165,8 @@ mov bh,0			;pagina
 mov dh,10			;fila
 mov dl,20			;columna
 int 10h
+
+;--------------------------------------------------------
 
 mov ah,10h			;espera caracter
 int 16h
